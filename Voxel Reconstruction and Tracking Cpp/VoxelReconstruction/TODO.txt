@@ -1,0 +1,15 @@
+v Remake background.pngs
+v Recalibrate camera extrinsics
+v Recalibrate thresholds
+
+- Code for K-means offline
+	- Avoid local minimum
+	- Save labels and clusters
+- Code for colouring offline
+	- Get voxel foreground projections (occlusion)
+	- Determine histogram stuff
+
+- Code for K-means online
+	- Match clusters according to colours
+	- Remove outliers?
+- Save positioning 

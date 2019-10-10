@@ -1,0 +1,71 @@
+//histogram psuedocode (takes the hue, saturation and value of the colour of a pixel, returns which bin this belongs in)
+int blackThreshold, greyThreshold, RGBgreyThreshold, whiteThreshold, RGborder, GBborder, BRborder, RYborder, YGborder, GCborder, CBborder, BMborder, MRborder;
+//Hue 0-360 with red at start and end, Saturation and Value are 0-100 (hah, that was WRONG, they go from 0-255...)
+//360/3 = 120 size of RGBgrey ranges, 60 size of RGBCYM ranges (these have been mapped to 0-255 instead)
+
+//initial guesses for good values
+blackThreshold = 64;
+greyThreshold = 192;
+whiteThreshold = 64;
+RGborder = 43, GBborder = 128, BRborder = 213, RYborder = 21, YGborder = 64, GCborder = 107, CBborder = 149, BMborder = 192, MRborder = 234;
+
+if (value < blackThreshold) { /*return bin = black*/ }
+else if(value < greyThreshold) {
+	if (saturation < RGBgreyThreshold) { /*return bin = grey*/ }
+	else if (BRborder < hue || hue < RGborder) { /*return bin = greyRed*/ } //here OR because red is at extreme hue values
+	else if (RGborder < hue && hue < GBborder) { /*return bin = greyGreen*/ }
+	else if (GBborder < hue && hue < BRborder) { /*return bin = greyBlue*/ }
+}
+else if (saturation < whiteThreshold) { /*return bin = white*/ }
+else {
+	if (MRborder < hue || hue < RYborder) { /*return bin = Red*/ } //here OR because red is at extreme hue values
+	else if (RYborder < hue && hue < YGborder) { /*return bin = Yellow*/ }
+	else if (YGborder < hue && hue < GCborder) { /*return bin = Green*/ }
+	else if (GCborder < hue && hue < CBborder) { /*return bin = Cyan*/ }
+	else if (CBborder < hue && hue < BMborder) { /*return bin = Blue*/ }
+	else if (BMborder < hue && hue < MRborder) { /*return bin = Magenta*/ }
+}
+
+
+//distance Chi-squared calculation
+//input original colour histogram (originalHistogram) and current observed colour histogram (observedHistogram)
+/*int originalHistogram[12], observedHistogram[12];
+float totalDistance = 0.0;
+int nrBins = 12;
+for (int i = 0; i < nrBins; i++) {
+	totalDistance += (pow((observedHistogram[i] - originalHistogram[i]), 2) / originalHistogram[i]);
+}
+//return totalDistance;
+*/
+
+
+//colours per label:
+
+//found a frame with as little occlusion as possible: 660 
+
+/*create 4 'histograms'; arrays? matrix?
+
+take the cluster centers from some_name3 
+
+- roll over each voxel that is on
+- observe the pixel for that voxel from each camera (if not occluded)
+- place the pixel in the correct bin for the closest cluster center (ED)
+*/
+
+
+for (int i = 0; i < visibleVoxels.size(); i++)
+{
+	float distance[4];
+	for (int j = 0; j < 4;) {
+		distance[j] = pow(visibleVoxels[i]->x - m_cluster_centers.at<float>(j,0), 2) + pow(visibleVoxels[i]->y - m_cluster_centers.at<float>(j,1), 2); //this is correct, do not wrong
+		j++;
+	}
+	//distance to a cluster is smaller than or as small as any of the other centers
+	if (distance[0] <= distance[1] && distance[0] <= distance[2] && distance[0] <= distance[3]) { /*increment bin(s) in histogram of cluster*/ } 
+	else if (distance[1] <= distance[2] && distance[1] <= distance[3]) {} 
+	else if (distance[2] <= distance[3]) {} 
+	else {}
+	//return a datastruct containing the histogram for each cluster (4x12)
+}
+
+
